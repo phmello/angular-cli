@@ -1,6 +1,7 @@
 import * as webpack from 'webpack';
 import * as path from 'path';
-import {BaseHrefWebpackPlugin} from '@angular-cli/base-href-webpack';
+import { BaseHrefWebpackPlugin } from '@angular-cli/base-href-webpack';
+const TsConfigPathsPlugin = require('awesome-typescript-loader').TsConfigPathsPlugin;
 
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
@@ -34,7 +35,7 @@ export function getWebpackCommonConfig(
     devtool: 'source-map',
     resolve: {
       extensions: ['', '.ts', '.js'],
-      root: appRoot
+      modules: [appRoot, path.join(projectRoot, 'node_modules')]
     },
     context: path.resolve(__dirname, './'),
     entry: entry,
@@ -106,6 +107,7 @@ export function getWebpackCommonConfig(
       ]
     },
     plugins: [
+      new TsConfigPathsPlugin({tsconfig: path.resolve(appRoot, appConfig.tsconfig)}),
       new HtmlWebpackPlugin({
         template: path.resolve(appRoot, appConfig.index),
         chunksSortMode: 'dependency'
