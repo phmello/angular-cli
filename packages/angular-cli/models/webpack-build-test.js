@@ -2,6 +2,7 @@
 
 const path = require('path');
 const webpack = require('webpack');
+const TsConfigPathsPlugin = require('awesome-typescript-loader').TsConfigPathsPlugin;
 
 const getWebpackTestConfig = function (projectRoot, environment, appConfig) {
 
@@ -12,7 +13,7 @@ const getWebpackTestConfig = function (projectRoot, environment, appConfig) {
     context: path.resolve(__dirname, './'),
     resolve: {
       extensions: ['', '.ts', '.js'],
-      root: appRoot
+      modules: [appRoot, path.join(projectRoot, 'node_modules')]
     },
     entry: {
       test: path.resolve(appRoot, appConfig.test)
@@ -78,6 +79,7 @@ const getWebpackTestConfig = function (projectRoot, environment, appConfig) {
       ]
     },
     plugins: [
+      new TsConfigPathsPlugin({tsconfig: path.resolve(appRoot, appConfig.tsconfig)}),
       new webpack.SourceMapDevToolPlugin({
         filename: null, // if no value is provided the sourcemap is inlined
         test: /\.(ts|js)($|\?)/i // process .js and .ts files only
